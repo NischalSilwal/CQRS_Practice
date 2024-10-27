@@ -48,7 +48,8 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    <img src="@Url.Content(item.ImagePath.Replace("\\", "/"))" alt="Product Image" style="width:100px;height:auto;" />
+                    <img src="@item.ImagePath" alt="Product Image" style="width:70px; height:auto;" />
+
                 </td>
                 <td>
                     <!-- Edit Link -->

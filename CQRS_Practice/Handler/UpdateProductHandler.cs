@@ -9,6 +9,7 @@ namespace CQRS_Practice.Handler
     {
         private readonly IProductRepository _productRepository;
         private readonly IWebHostEnvironment _env;
+        private readonly string _apiBaseUrl = "https://localhost:7114"; // Define API base URL here
 
         public UpdateProductHandler(IProductRepository productRepository, IWebHostEnvironment env)
         {
@@ -54,8 +55,9 @@ namespace CQRS_Practice.Handler
                     await request.ProductDTO.ImageFile.CopyToAsync(fileStream);
                 }
 
-                // Update the product's ImagePath to the new path
-                product.ImagePath = "/UploadedImages/" + uniqueFileName;
+                // Update the product's ImagePath with the full URL
+                var relativePath = $"/UploadedImages/{uniqueFileName}";
+                product.ImagePath = $"{_apiBaseUrl}{relativePath}";
             }
 
             // Update the product in the repository

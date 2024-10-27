@@ -22,26 +22,29 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
 
     public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        // Generate a unique file name using a GUID
         var fileName = $"{Guid.NewGuid()}_{request.ProductDTO.ImageFile.FileName}";
         var filePath = Path.Combine(_imageUploadPath, fileName);
 
-        // Save the file to the "wwwroot/UploadedImages" directory
+        // Save the image to "wwwroot/UploadedImages"
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await request.ProductDTO.ImageFile.CopyToAsync(stream);
         }
 
-        // Save product to the database (including the image path)
+        // Update to use API's correct base URL
+        var apiBaseUrl = "https://localhost:7114"; // API URL
+        var relativePath = $"/UploadedImages/{fileName}";
+        var fullImagePath = $"{apiBaseUrl}{relativePath}";
+
         var product = new Product
         {
             Name = request.ProductDTO.Name,
             Price = request.ProductDTO.Price,
             Description = request.ProductDTO.Description,
-            ImagePath = Path.Combine("UploadedImages", fileName) // Store relative path
+            ImagePath = fullImagePath // Full path including API base URL
         };
 
-        // Add the product using the repository
         return await _productRepository.AddProductAsync(product);
     }
+
 }
