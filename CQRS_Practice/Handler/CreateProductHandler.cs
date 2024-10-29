@@ -1,4 +1,6 @@
-﻿using CQRS_Practice.Command;
+﻿using AutoMapper;
+using CQRS_Practice.Command;
+//using CQRS_Practice.Mapper;
 using CQRS_Practice.Model;
 using CQRS_Practice.Repository;
 using MediatR;
@@ -7,10 +9,13 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
 {
     private readonly IProductRepository _productRepository;
     private readonly string _imageUploadPath;
+    private readonly IMapper _mapper;
 
-    public CreateProductHandler(IProductRepository productRepository)
+    public CreateProductHandler(IProductRepository productRepository, IMapper mapper)
     {
+
         _productRepository = productRepository;
+        _mapper = mapper;
         // Set the upload path to the "wwwroot/UploadedImages" directory
         _imageUploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedImages");
         // Ensure the directory exists
@@ -36,6 +41,7 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
         var relativePath = $"/UploadedImages/{fileName}";
         var fullImagePath = $"{apiBaseUrl}{relativePath}";
 
+        
         var product = new Product
         {
             Name = request.ProductDTO.Name,
@@ -43,8 +49,10 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
             Description = request.ProductDTO.Description,
             ImagePath = fullImagePath // Full path including API base URL
         };
-
-        return await _productRepository.AddProductAsync(product);
+        
+       
+      // var product = _mapper.Map<Product>(request);
+       return await _productRepository.AddProductAsync(product);
     }
 
 }

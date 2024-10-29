@@ -17,8 +17,9 @@ namespace CQRS_Practice.Services
         }
 
         // Add a new product
-        public async Task<int> AddProductAsync(CreateProductDTO productDTO)
+        public async Task<int> AddProductAsync(ProductDTO productDTO)
         {
+
             var product = new Product
             {
                 Name = productDTO.Name,

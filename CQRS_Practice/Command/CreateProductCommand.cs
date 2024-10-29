@@ -5,9 +5,9 @@ namespace CQRS_Practice.Command
 {
     public class CreateProductCommand : IRequest<int>
     {
-        public CreateProductDTO ProductDTO { get; }
+        public ProductDTO ProductDTO { get; }
 
-        public CreateProductCommand(CreateProductDTO productDTO)
+        public CreateProductCommand(ProductDTO productDTO)
         {
             ProductDTO = productDTO;
         }

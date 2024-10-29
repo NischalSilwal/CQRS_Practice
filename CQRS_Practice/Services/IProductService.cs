@@ -6,7 +6,7 @@ namespace CQRS_Practice.Services
 {
     public interface IProductService
     {
-        Task<int> AddProductAsync(CreateProductDTO productDTO);
+        Task<int> AddProductAsync(ProductDTO productDTO);
         Task<ProductDTO> GetProductByIdAsync(int id);
         Task<IEnumerable<ProductDTO>> GetAllProductsAsync();
         Task<bool> UpdateProductAsync(int id, ProductDTO updateProductDTO);

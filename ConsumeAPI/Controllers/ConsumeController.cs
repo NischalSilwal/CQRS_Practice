@@ -16,12 +16,14 @@ namespace ConsumeAPI.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetAllProduct()
         {
             var products = await _productRepository.GetAllProductsAsync();
             return View(products);
         }
 
+        [HttpGet]
         public IActionResult AddProduct()
         {
             return View();
@@ -35,13 +37,13 @@ namespace ConsumeAPI.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
+            /*
             if (!ModelState.IsValid)
             {
                 ViewBag.msg = "Invalid input";
                 return View();
             }
-
+            */
             var success = await _productRepository.AddProductAsync(productDTO);
             if (success)
             {
@@ -52,7 +54,7 @@ namespace ConsumeAPI.Controllers
             ViewBag.msg = "Error creating product!";
             return View();
         }
-
+        [HttpGet]
         public async Task<IActionResult> EditProduct(int id)
         {
             var productDTO = await _productRepository.GetProductByIdAsync(id);
@@ -79,6 +81,7 @@ namespace ConsumeAPI.Controllers
             return View(productDTO);
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var success = await _productRepository.DeleteProductAsync(id);
@@ -93,5 +96,7 @@ namespace ConsumeAPI.Controllers
 
             return RedirectToAction("GetAllProduct");
         }
+
+
     }
 }

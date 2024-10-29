@@ -1,26 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using MediatR;
 using CQRS_Practice.Command;
 using CQRS_Practice.Query;
 using CQRS_Practice.DTOs;
+using AutoMapper;
 
-namespace YourProject.API.Controllers
+namespace CQRS_Practice.Controllers
 {
     [Route("[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ProductController(IMediator mediator)
+        public ProductController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         // Create Product (with ImageFile)
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateProductDTO productDTO)
+        public async Task<IActionResult> Create([FromForm] ProductDTO productDTO)
         {
             if (productDTO.ImageFile == null || productDTO.ImageFile.Length == 0)
             {
@@ -40,7 +42,7 @@ namespace YourProject.API.Controllers
             {
                 return NotFound();
             }
-
+          
             return Ok(product);
         }
 
@@ -49,12 +51,13 @@ namespace YourProject.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var products = await _mediator.Send(new GetAllProductsQuery());
+         
             return Ok(products);
         }
 
         // Update Product (with ImageFile)
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromForm] UpdateProductDTO productDTO)
+        public async Task<IActionResult> Update(int id, [FromForm] ProductDTO productDTO)
         {
             if (productDTO.ImageFile != null && productDTO.ImageFile.Length == 0)
             {

@@ -1,4 +1,5 @@
-﻿using CQRS_Practice.DTOs;
+﻿using AutoMapper;
+using CQRS_Practice.DTOs;
 using CQRS_Practice.Query;
 using CQRS_Practice.Repository;
 using MediatR;
@@ -8,15 +9,18 @@ namespace CQRS_Practice.Handler
     public class GetAllProductsHandler : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDTO>>
     {
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-        public GetAllProductsHandler(IProductRepository productRepository)
+        public GetAllProductsHandler(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<ProductDTO>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
             var products = await _productRepository.GetAllProductsAsync();
+            /*
             return products.Select(product => new ProductDTO
             {
                 Id = product.Id,
@@ -25,6 +29,9 @@ namespace CQRS_Practice.Handler
                 Description = product.Description,
                 ImagePath = product.ImagePath
             }).ToList();
+
+            */
+            return _mapper.Map<IEnumerable<ProductDTO>>(products);
         }
     }
 
