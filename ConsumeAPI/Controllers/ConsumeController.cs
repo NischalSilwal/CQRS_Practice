@@ -64,6 +64,11 @@ namespace ConsumeAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProduct(int id, ProductDTO productDTO)
         {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (!ModelState.IsValid)
             {
                 ViewBag.msg = "Invalid input";
@@ -84,6 +89,11 @@ namespace ConsumeAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
         {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             var success = await _productRepository.DeleteProductAsync(id);
             if (success)
             {
