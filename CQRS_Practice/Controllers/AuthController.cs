@@ -1,6 +1,8 @@
+using CQRS_Practice.Command;
 using CQRS_Practice.DTOs;
 using CQRS_Practice.Repository;
 using CQRS_Practice.Utility;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,25 +14,23 @@ namespace DatabasePractice1.Controllers
 {
     public class AuthController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly JwtTokenHelper _jwtTokenHelper;
+        private readonly IMediator _mediatar;
 
-        public AuthController(IUserRepository userRepository, JwtTokenHelper jwtTokenHelper = null)
+        public AuthController(IMediator mediator)
         {
-            _userRepository = userRepository;
-            _jwtTokenHelper = jwtTokenHelper;
+            _mediatar = mediator;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDto loginDto)
         {
-            var user = await _userRepository.Authenticate(loginDto.Username, loginDto.Password);
-            if (user == null)
+            var token = await _mediatar.Send(new LoginCommand(loginDto));
+            if (token == null)
             {
                 return Unauthorized();
             }
 
-            var token = await Task.Run(() => _jwtTokenHelper.GenerateToken(user));
+           // var token = await Task.Run(() => _jwtTokenHelper.GenerateToken(user));
 
             // Return the token wrapped in a JSON object
             return Ok(new { Token = token });

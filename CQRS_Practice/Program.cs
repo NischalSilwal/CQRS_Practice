@@ -28,6 +28,9 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddAutoMapper(typeof(Program));
 
+// Register JwtTokenHelper
+builder.Services.AddScoped<JwtTokenHelper>();
+
 builder.Services.AddScoped<JwtTokenHelper>();
 //builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly));
 
