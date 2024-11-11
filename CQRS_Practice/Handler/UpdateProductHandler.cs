@@ -3,6 +3,7 @@ using CQRS_Practice.Repository;
 using MediatR;
 using System.IO;
 using AutoMapper;
+using CQRS_Practice.Services;
 
 namespace CQRS_Practice.Handler
 {
@@ -12,10 +13,11 @@ namespace CQRS_Practice.Handler
         private readonly IWebHostEnvironment _env;
         private readonly string _apiBaseUrl = "https://localhost:7114"; // Define API base URL here
         private readonly IMapper _mapper;
+        private readonly IProductService _productService;
 
-        public UpdateProductHandler(IProductRepository productRepository, IWebHostEnvironment env, IMapper mapper)
+        public UpdateProductHandler(IProductService productService, IWebHostEnvironment env, IMapper mapper)
         {
-            _productRepository = productRepository;
+            _productService = productService;
             _env = env;
             _mapper = mapper;
         }
@@ -23,7 +25,7 @@ namespace CQRS_Practice.Handler
         public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             // Fetch the existing product
-            var product = await _productRepository.GetProductByIdAsync(request.Id);
+            var product = await _productService.GetProductByIdAsync(request.Id);
             if (product == null) return false;
 
             /* Update product details
@@ -68,7 +70,7 @@ namespace CQRS_Practice.Handler
             }
 
             // Update the product in the repository
-            return await _productRepository.UpdateProductAsync(product);
+            return await _productService.UpdateProductAsync(product);
         }
     }
 }

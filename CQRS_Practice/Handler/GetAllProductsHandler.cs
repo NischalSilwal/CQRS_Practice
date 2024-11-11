@@ -2,6 +2,7 @@
 using CQRS_Practice.DTOs;
 using CQRS_Practice.Query;
 using CQRS_Practice.Repository;
+using CQRS_Practice.Services;
 using MediatR;
 
 namespace CQRS_Practice.Handler
@@ -10,16 +11,17 @@ namespace CQRS_Practice.Handler
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
+        private readonly IProductService _productService;
 
-        public GetAllProductsHandler(IProductRepository productRepository, IMapper mapper)
+        public GetAllProductsHandler(IProductService productService, IMapper mapper)
         {
-            _productRepository = productRepository;
+            _productService = productService;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<ProductDTO>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _productRepository.GetAllProductsAsync();
+            var products = await _productService.GetAllProductsAsync();
             /*
             return products.Select(product => new ProductDTO
             {

@@ -1,6 +1,7 @@
 using CQRS_Practice.Command;
 using CQRS_Practice.Data;
 using CQRS_Practice.Repository;
+using CQRS_Practice.Service;
 using CQRS_Practice.Services;
 using CQRS_Practice.Utility;
 using DatabasePractice1.Repo;

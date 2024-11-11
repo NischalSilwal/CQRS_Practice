@@ -3,18 +3,19 @@ using CQRS_Practice.Command;
 //using CQRS_Practice.Mapper;
 using CQRS_Practice.Model;
 using CQRS_Practice.Repository;
+using CQRS_Practice.Services;
 using MediatR;
 
 public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
 {
-    private readonly IProductRepository _productRepository;
+   
+    private readonly IProductService _productService;
     private readonly string _imageUploadPath;
     private readonly IMapper _mapper;
 
-    public CreateProductHandler(IProductRepository productRepository, IMapper mapper)
+    public CreateProductHandler(IMapper mapper, IProductService productService)
     {
-
-        _productRepository = productRepository;
+        _productService = productService;
         _mapper = mapper;
         // Set the upload path to the "wwwroot/UploadedImages" directory
         _imageUploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedImages");
@@ -52,7 +53,7 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
         
        
       // var product = _mapper.Map<Product>(request);
-       return await _productRepository.AddProductAsync(product);
+       return await _productService.AddProductAsync(product);
     }
 
 }
